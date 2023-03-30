@@ -1,62 +1,35 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
+import "./styles.css";
 
-function Timer(){
-    const [seconds, setSeconds] = useState(0);
-    const [paused, setPaused] = useState(false);
+export default function App() {
+  const [count, setCount] = useState(0);
+  // const [isActive,setIsActive] = useState(false)
+  let timer;
+  const handleStart = () => {
+    setCount(count + 1);
+    // setIsActive(true)
+  };
 
-    const startTimer = () => {
-
-        const current = setInterval(() => {
-            setSeconds(seconds => seconds + 1)
-        }, 1000)
-
-        document.querySelector('.start-button').setAttribute("disabled", "true")
-        document.querySelector('.stop-button').removeAttribute("disabled")
-
-
-            const pauseButton = document.createElement("button")
-            pauseButton.innerText = 'pause'
-            pauseButton.className="pause-button"
-            document.querySelector('.counter-container').appendChild(pauseButton)
-            pauseButton.addEventListener("click", () => {
-                if (pauseButton.innerText === "pause"){
-                    pauseButton.innerText = "resume"
-                    clearInterval(current)
-                    setPaused(true)
-                } else {
-                    pauseButton.innerText = 'pause'
-                    setInterval(() => {
-                        setSeconds(seconds => seconds + 1)
-                    }, 1000)
-                    setPaused(false)
-                }
-            })
-
-
-}
-   
-
-const stopTimer = () => {
-    clearInterval(setSeconds(0))
-
-    if (!!document.querySelector('#counter')){
-        document.querySelector('#counter').remove()
+  const handleStop = () => {
+    clearTimeout(timer);
+  };
+  const handlereset = () => {
+    setCount(0);
+    clearTimeout(timer);
+  };
+  useEffect(() => {
+    if (count) {
+      timer = setTimeout(handleStart, 1500);
     }
-    document.querySelector('.stop-button').setAttribute("disabled", "true")
-    document.querySelector('.start-button').removeAttribute("disabled")
-    document.querySelector('.pause-button').remove()
+  }, [count]);
+
+  return (
+    <div className="App">
+      <h1>Let's start the counter</h1>
+      <h3>{count}</h3>
+      <button onClick={handleStart}>start</button>
+      <button onClick={handleStop}>stop</button>
+      <button onClick={handlereset}>reset</button>
+    </div>
+  );
 }
-
-    const currentCount = seconds;
-    return(
-        <div className="counter-container">
-             <button className="start-button" onClick={startTimer}>start</button>
-            <button className="stop-button" onClick={stopTimer}>stop</button>
-            <p id="counter">{currentCount}</p>
-
-        </div>
-    )
-}
-
-export default Timer;
