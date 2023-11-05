@@ -4,23 +4,26 @@ import "./styles.css";
 export default function App() {
   const [count, setCount] = useState(0);
   // const [isActive,setIsActive] = useState(false)
-  let timer;
+  let timerRef = useRef();
+  
   const handleStart = () => {
     setCount(count + 1);
     // setIsActive(true)
   };
 
   const handleStop = () => {
-    clearTimeout(timer);
+    clearTimeout(timerRef.current);
   };
   const handlereset = () => {
     setCount(0);
-    clearTimeout(timer);
+    clearTimeout(timerRef.current);
   };
   useEffect(() => {
     if (count) {
-      timer = setTimeout(handleStart, 1500);
+      timerRef.current = setTimeout(handleStart, 1500);
     }
+
+    return () =>clearTimeout(timerRef.current)
   }, [count]);
 
   return (
